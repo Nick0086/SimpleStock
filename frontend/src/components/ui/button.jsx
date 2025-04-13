@@ -6,19 +6,17 @@ import { cn } from "@/lib/utils"
 import { Loader } from "lucide-react";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-md md:text-sm text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 duration-300",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: " text-primary-foreground ",
-        destructive:
-          "bg-destructive text-destructive-foreground enabled:hover:bg-destructive/90",
-        outline:
-          "border shadow border-input bg-background enabled:hover:bg-accent enabled:hover:text-accent-foreground",
+        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-blue-500 underline-offset-4 enabled:hover:underline",
+        link: "text-primary underline-offset-4 hover:underline",
         cancel: "bg-gray-200 text-gray-600 enabled:hover:bg-gray-300",
-        none: "text-primary",
         gradient: "bg-gradient-to-r shadow from-accent-indigo to-purple-600 text-white enabled:hover:from-accent-indigo-foreground enabled:hover:to-purple-700 enabled:hover:shadow-xl",
         grey: "bg-accent text-accent-foreground shadow-sm enabled:hover:bg-accent",
         serchBut: "bg-[#f0f3ff] w-full border-none rounded-none",
@@ -29,7 +27,6 @@ const buttonVariants = cva(
         info: "bg-[#3abaf4] shadow-custom-blue text-white hover:bg-[#0da8ee] focus:bg-[#0da8ee] ",
         danger: "bg-[#fc544b] shadow-custom-red text-white hover:bg-[#fb160a] focus:bg-[#fb160a] ",
         success: "bg-[#54ca68] shadow-custom-green text-white hover:bg-[#41c457] focus:bg-[#41c457] ",
-        secondary: "bg-secondary/80 font-bold text-secondary-foreground  hover:bg-secondary text-xs shadow-md",
         primary: "bg-accent-indigo shadow-custom text-white hover:bg-accent-indigo-foreground focus:bg-accent-indigo-foreground",
         addBtn: "border border-accent-indigo  text-accent-indigo hover:bg-accent-indigo hover:text-white bg-transparent font-bold rounded-lg whitespace-nowrap",
         iconBtn: "text-white bg-accent-indigo hover:bg-accent-indigo-foreground rounded-lg whitespace-nowrap",
@@ -37,10 +34,10 @@ const buttonVariants = cva(
         back:'text-indigo-600 shadow-none border-none bg-indigo-50 hover:bg-indigo-100'
       },
       size: {
-        default: "px-4 py-2",
-        sm: " rounded-md px-3 py-1.5",
-        lg: "rounded-md px-5 py-3",
-        icon: "h-8 w-8",
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
         lgIcon: "h-10 w-10",
         xs: "text-xs px-2 py-2",
         customicon: "px-[15px] py-[7.5px] !rounded-[30px] ",
@@ -48,7 +45,6 @@ const buttonVariants = cva(
         modalSubmit: 'h-9 text-xs rounded-sm px-4 py-2',
         customIconBtn: "px-[14px] py-[3px] rounded-[30px] h-[30px] flex justify-center items-center",
         customEditBtn: "size-[32px] rounded-[5px] flex justify-center items-center",
-
       },
       intent: {
         indigo: "bg-accent-indigo enabled:hover:bg-accent-indigo-foreground text-white",
