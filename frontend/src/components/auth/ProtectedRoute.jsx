@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router';
 import { useAuth } from '@/contexts/AuthContext';
+import { Loader2 } from 'lucide-react';
 
 /**
  * Protected route component
@@ -9,7 +10,11 @@ export function ProtectedRoute({ children }) {
   const location = useLocation();
 
   if (loading) {
-    return <div>Loading...</div>; // Or your loading component
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   if (!user) {
@@ -23,12 +28,16 @@ export function ProtectedRoute({ children }) {
 /**
  * Public only route component (accessible only when not authenticated)
  */
-export function PublicOnlyRoute({ children, redirectTo = '/' }) {
-  const { user, isLoadingUser } = useAuth();
+export function PublicOnlyRoute({ children, redirectTo = '/dashboard' }) {
+  const { user, loading } = useAuth();
   const location = useLocation();
 
-  if (isLoadingUser) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   if (user) {

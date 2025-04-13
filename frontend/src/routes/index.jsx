@@ -10,6 +10,8 @@ import { PasswordReset } from '@/components/auth/PasswordReset';
 import { ForgotPassword } from '@/components/auth/ForgotPassword';
 import { VerifyEmail } from '@/components/auth/VerifyEmail';
 import { Dashboard } from '@/pages/Dashboard';
+import { Orders } from '@/pages/Orders';
+import { Purchases } from '@/pages/Purchases';
 import { Admin } from '@/pages/Admin';
 import { NotFound } from '@/pages/NotFound';
 import { MainLayout } from '@/layouts/MainLayout';
@@ -24,18 +26,34 @@ const AppWrapper = ({ children }) => {
 export const Router = createBrowserRouter([
   {
     path: "/",
+    element: <AppWrapper><Navigate to="/dashboard" replace /></AppWrapper>,
+  },
+  {
+    path: "/dashboard",
     element: <AppWrapper><MainLayout /></AppWrapper>,
     errorElement: <NotFound />,
     children: [
       {
         index: true,
-        element: <Navigate to="/dashboard" replace />
-      },
-      {
-        path: "dashboard",
         element: (
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "orders",
+        element: (
+          <ProtectedRoute>
+            <Orders />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "purchases",
+        element: (
+          <ProtectedRoute>
+            <Purchases />
           </ProtectedRoute>
         )
       },
@@ -95,6 +113,6 @@ export const Router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <NotFound />
+    element: <Navigate to="/dashboard" replace />
   }
 ]); 

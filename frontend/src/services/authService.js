@@ -1,4 +1,6 @@
-import { api } from '@/lib/api';
+import api from '@/services/api';
+
+const TOKEN_KEY = 'simpleStock_token';
 
 /**
  * Authentication service for handling auth-related API calls
@@ -18,8 +20,17 @@ export const authService = {
    * @param {Object} credentials Login credentials
    */
   async login(credentials) {
-    const response = await api.post('/auth/login', credentials);
-    return response.data;
+    try {
+      const response = await api.post('/auth/login', credentials);
+      const { accessToken, user } = response.data;
+      
+      localStorage.setItem(TOKEN_KEY, accessToken);
+      return { user, accessToken };
+    } catch (error) {
+      // Clear any existing token on login failure
+      localStorage.removeItem(TOKEN_KEY);
+      throw error;
+    }
   },
 
   /**
@@ -107,7 +118,14 @@ export const authService = {
    * Refresh token
    */
   async refreshToken() {
-    const response = await api.post('/auth/refresh');
-    return response.data;
+    try {
+      const response = await api.post('/auth/refresh');
+      const { accessToken } = response.data;
+      localStorage.setItem(TOKEN_KEY, accessToken);
+      return accessToken;
+    } catch (error) {
+      localStorage.removeItem(TOKEN_KEY);
+      throw error;
+    }
   }
 }; 

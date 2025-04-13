@@ -6,15 +6,41 @@ import { useNavigate } from 'react-router';
 // Export the context so it can be imported in other files
 const AuthContext = createContext(null);
 
+// Keys for localStorage
+const USER_KEY = 'simpleStock_user';
+const TOKEN_KEY = 'simpleStock_token';
+
 /**
  * Authentication provider component
  */
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem(USER_KEY);
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+  const [accessToken, setAccessToken] = useState(() => {
+    return localStorage.getItem(TOKEN_KEY) || null;
+  });
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Save user and token to localStorage
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(USER_KEY);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (accessToken) {
+      localStorage.setItem(TOKEN_KEY, accessToken);
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+    }
+  }, [accessToken]);
 
   // Request OTP
   const requestOTP = useCallback(async (email, type = 'login') => {
@@ -54,6 +80,7 @@ export function AuthProvider({ children }) {
         description: "OTP verified successfully",
       });
 
+      navigate('/dashboard');
       return data;
     } catch (error) {
       toast({
@@ -65,7 +92,7 @@ export function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [toast, navigate]);
 
   // Login
   const login = useCallback(async (credentials) => {
@@ -81,6 +108,7 @@ export function AuthProvider({ children }) {
         description: "Logged in successfully",
       });
 
+      navigate('/dashboard');
       return data;
     } catch (error) {
       toast({
@@ -92,7 +120,7 @@ export function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [toast, navigate]);
 
   // Logout
   const logout = useCallback(async () => {
@@ -141,14 +169,19 @@ export function AuthProvider({ children }) {
   }, [navigate]);
 
   // Initialize auth state
-  const initializeAuth = useCallback(async () => {
-    try {
-      setLoading(true);
-      await checkAuth();
-    } finally {
-      setLoading(false);
-    }
-  }, [checkAuth]);
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        if (accessToken) {
+          await checkAuth();
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
+  }, [accessToken, checkAuth]);
 
   const value = {
     user,
@@ -159,8 +192,7 @@ export function AuthProvider({ children }) {
     requestOTP,
     verifyOTP,
     checkAuth,
-    refreshToken,
-    initializeAuth
+    refreshToken
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
